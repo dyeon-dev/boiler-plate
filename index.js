@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const port = 5000
 const bodyParser = require('body-parser')
+
+const config = require('./config/key')
+
 const { User } = require("./models/User");
 
 // url 파싱해서 데이터 가져오기
@@ -9,7 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
  
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://kdy37912:1234@boiler-plate.d0suo.mongodb.net/?retryWrites=true&w=majority&appName=boiler-plate').then(()=>console.log("MongoDB connected"))
+mongoose.connect(config.mongoURI).then(()=>console.log("MongoDB connected"))
 .catch(err=>console.log(err))
 
 app.get('/', (req, res)=>res.send('Hello World'))
