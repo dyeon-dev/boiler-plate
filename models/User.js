@@ -78,6 +78,24 @@ userSchema.methods.generateToken = async function() {
         throw err;
     }
 };
+
+userSchema.statics.findByToken = async function(token) {
+    const user = this;
+    
+    try {
+        // 토큰을 decode 한다
+        const decoded = await jwt.verify(token, 'secretToken');
+        
+        // 유저 아이디를 이용해 유저를 찾은 다음에 클라이언트에서 가져온 token과 DB에 보관된 token이 일치하는지 확인
+        const foundUser = await user.findOne({ "_id": decoded, "token": token });
+        
+        return foundUser;
+    } catch (err) {
+        throw err;
+    }
+};
+
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = { User }
