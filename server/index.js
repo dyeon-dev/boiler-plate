@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const config = require('./config/key')
 const { auth } = require('./middleware/auth')
 const { User } = require("./models/User");
+const cors = require('cors');
+app.use(cors());
 
 // url 파싱해서 데이터 가져오기
 app.use(bodyParser.urlencoded({extended: true}))
@@ -19,7 +21,9 @@ mongoose.connect(config.mongoURI).then(()=>console.log("MongoDB connected"))
 .catch(err=>console.log(err))
 
 app.get('/', (req, res)=>res.send('Hello World'))
-
+app.get('/api/hello', (req, res)=> {
+    res.send("안녕하세요")    
+})
 // 회원가입할 때 필요한 정보들을 client에서 가져오면 DB에 넣어준다.
 app.post('/api/users/register', async (req, res) => {
     const user = new User(req.body)
@@ -103,4 +107,4 @@ app.get('/api/users/logout', auth, async (req, res) => {
     }
 });
 
-app.listen(port, () => console.log(`Example ${port}`))
+app.listen(port, () => console.log(`Server running on port ${port}`))
