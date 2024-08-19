@@ -20,14 +20,9 @@ const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI).then(()=>console.log("MongoDB connected"))
 .catch(err=>console.log(err))
 
-app.get('/', (req, res)=>res.send('Hello World'))
-app.get('/api/hello', (req, res)=> {
-    res.send("안녕하세요")    
-})
 // 회원가입할 때 필요한 정보들을 client에서 가져오면 DB에 넣어준다.
 app.post('/api/users/register', async (req, res) => {
     const user = new User(req.body)
-
     try {
         const userInfo = await user.save()
         return res.status(200).json({
@@ -51,8 +46,6 @@ app.post('/api/users/login', async (req, res) => {
         }
         // 요청된 이메일이 DB에 있다면 비밀번호가 맞는지 확인한다
         const isMatch = await user.comparePassword(req.body.password);
-        console.log('req.body.password ', req.body.password)
-        console.log('isMatch ', isMatch)
         if (!isMatch) {
             return res.json({
                 loginSuccess: false,
