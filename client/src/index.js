@@ -6,13 +6,14 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import promiseMiddleware from "redux-promise";
-import ReduxThunk from "redux-thunk";
+import {thunk} from 'redux-thunk';
+
 import Reducer from "./_reducers";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware,
-  ReduxThunk
+  thunk
 )(createStore);
 root.render(
   <React.StrictMode>
