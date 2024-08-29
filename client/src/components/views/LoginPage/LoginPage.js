@@ -1,49 +1,63 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
-import {loginUser} from '../../../_actions/user_action';
-export default function LoginPage() {
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../../_actions/user_action";
+import Auth from "../../../hoc/auth";
+
+function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [Email, setEmail] = useState('')
-  const [Password, setPassword] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value)
-  }
+  const handleChange = (e) => {
+    const { value, type } = e.target;
+    if (type === "email") setEmail(value);
+    else if (type === "password") setPassword(value);
+  };
 
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value)
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-    
-    let body = {
-      email: Email,
-      password: Password
-    }
+    const body = {
+      email: email,
+      password: password,
+    };
 
-    dispatch(loginUser(body))
-    .then(response=> {
-      if(response.payload.loginSuccess) {
+    dispatch(loginUser(body)).then((res) => {
+      if (res.payload.loginSuccess) {
         navigate("/");
       } else {
-        alert('로그인 실패')
+        alert("Error");
       }
-    })
-  }
+    });
+  };
+
   return (
-    <div>
-      <form onSubmit={onSubmitHandler}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100vh",
+      }}
+    >
+      <form
+        style={{ display: "flex", flexDirection: "column" }}
+        onSubmit={handleSubmit}
+      >
         <label>Email</label>
-        <input type="email" value={Email} onChange={onEmailHandler} />
+        <input type="email" value={email} onChange={handleChange} />
         <label>Password</label>
-        <input type="password" value={Password} onChange={onPasswordHandler} />
+        <input type="password" value={password} onChange={handleChange} />
+
         <br />
         <button>Login</button>
       </form>
     </div>
-  )
+  );
 }
+
+export default Auth(LoginPage, false);
